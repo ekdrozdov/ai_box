@@ -81,7 +81,6 @@ void Space::setMeshSize(int xSize, int ySize) {
 }
 
 void Space::printMesh() {
-	printf("Mesh:\n");
 	for (int i = 0; i < ySize; ++i) {
 		for (int j = 0; j < xSize; ++j) {
 			printf("%3.3f ", mesh[i][j]);
@@ -146,8 +145,8 @@ double** Space::step() {
 	}
 
 	// Initialize additions mesh with zeros.
-	for (int i = 0; i < ySize; ++i) {
-		for (int j = 0; j < xSize; ++j) {
+	for (int i = 0; i < extMeshYSize; ++i) {
+		for (int j = 0; j < extMeshXSize; ++j) {
 			additionsMesh[i][j] = 0.0;
 		}
 	}
@@ -247,7 +246,7 @@ double** Space::step() {
 	// Bottom right corner:
 	mesh[0][0] += additionsMesh[extMeshYSize - 1][extMeshXSize - 1];
 
-	for (int i = 0; i < ySize; ++i) {
+	for (int i = 0; i < extMeshYSize; ++i) {
 		delete[] extMesh[i];
 		delete[] additionsMesh[i];
 	}
@@ -285,7 +284,7 @@ double Space::getTotalEnergyValue() {
 	double total = 0.0;
 	for (int i = 0; i < ySize; ++i) {
 		for (int j = 0; j < xSize; ++j) {
-			total =+ mesh[i][j];
+			total += mesh[i][j];
 		}
 	}
 	return total;
@@ -301,4 +300,11 @@ void Space::setEnergyInNode(int x, int y, double energyVal) {
 
 double Space::getNodeEnergy(int x, int y) {
 	return mesh[y][x];
+}
+
+int* Space::getNodeByShift(int x, int y, int shiftX, int shiftY) {
+	int* newCoords = new int[2];
+	newCoords[0] = (x + shiftX) % xSize;
+	newCoords[1] = (y + shiftY) % ySize;
+	return newCoords;
 }

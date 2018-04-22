@@ -1,6 +1,13 @@
+// TODO
+// wrap coordinates in class "Node"
+// some methods of Node:
+// 	node.left(int count);
+// 	node.leftUp(int count);
+
 #include "organism.h"
 
-Organism::Organism(double pep, int x, int y) {
+Organism::Organism(double pep, int x, int y, Space* space) {
+	this->space = space;
 	this->pep = pep - pep * cAep;
 	aep = pep * cAep;
 	wepq = 0.0;
@@ -12,30 +19,31 @@ Organism::Organism(double pep, int x, int y) {
 }
 
 Organism::~Organism() {
+	space = NULL;
 }
 
-Organism::eat(double availableEnergy) {
+void Organism::eat(double availableEnergy) {
 	double energyToEat = pep * cEating;
 	if (availableEnergy > energyToEat) {
-		addEnergyToNode(x, y, -energyToEat);
+		space->addEnergyToNode(x, y, -energyToEat);
 		repq = energyToEat;
 	}
 	else {
-		setEnergyInNode(x, y, 0.0);
+		space->setEnergyInNode(x, y, 0.0);
 		repq = availableEnergy;
 	}
 }
 
 void Organism::disintegration() {
-	energyToPass = pep * cDesintegration;
+	double energyToPass = pep * cDesintegration;
 	if (pep < energyToPass) {
 		pep = 0.0;
-		addEnergyToNode(x, y, pep);
+		space->addEnergyToNode(x, y, pep);
 		// !DELETE ORGANISM.
 	}
 	else {
 		pep -= energyToPass;
-		addEnergyToNode(x, y, energyToPass);
+		space->addEnergyToNode(x, y, energyToPass);
 	}
 }
 
@@ -46,25 +54,50 @@ void Organism::die() {
 }
 
 void Organism::grow() {
-	growthEnergy = cGrowth * aep;
+	double growthEnergy = cGrowth * aep;
 	pep += growthEnergy;
 	aep -= growthEnergy;
 	state++;
 }
 
-void Organism::reproduct() {
+Organism Organism::reproduct() {
+	// Define child coordinates.
+	int shiftDirection = rand() % 4;
+	int shiftX = 0;
+	int shiftY = 0;
+	if (shiftDirection = 0) {
+		shiftX = rand() % reproductionMaxShift;
+	}
+	else if (shiftDirection = 1) {
+		shiftX = -(rand() % reproductionMaxShift);
+	}
+	else if (shiftDirection = 2) {
+		shiftY = (rand() % reproductionMaxShift);
+	}
+	else if (shiftDirection = 3) {
+		shiftY = -(rand() % reproductionMaxShift);
+	}
+	int* childCoordinates;
+	childCoordinates = new int[2];
+	childCoordinates = space->getNodeByShift(x, y, shiftX, shiftY);
 
+	// Define child pep.
+	double childPep = pep * cReproductionPep;
+	pep -= childPep;
+
+	return Organism(childPep, 
+			childCoordinates[0], childCoordinates[1], space);
 }
 
-Organism::step() {
+void Organism::step() {
 	// Desintegration.
 	if (state == -1) {
-		desintegration();
+		disintegration();
 		return;
 	}
 
 	wepq = pep * cWepq;
-	availableEnergy = space.getNodeEnergy(x, y);
+	double availableEnergy = space->getNodeEnergy(x, y);
 
 	// Death.
 	if (aep <= 0.0) {
@@ -78,7 +111,7 @@ Organism::step() {
 	}
 	// Growth or reproduction.
 	else {
-		growthChance = (rand() % 100) + 1;
+		double growthChance = (rand() % 100) + 1;
 		if (growthChance > cReproduction) {
 			grow();
 		}
@@ -89,5 +122,16 @@ Organism::step() {
 
 	aep -= wepq;
 	aep += repq;
+}
+
+void Organism::printInfo() {
+	printf("Plant:\n");
+	printf("coordinates: %d %d\n", x, y);
+	printf("pep: %lf\n", pep);
+	printf("aep: %lf\n", aep);
+	printf("wepq: %lf\n", wepq);
+	printf("state: %d\n", state);
+	printf("repq: %lf\n", repq);
+	printf("life time: %d\n", liveTime);
 }
 

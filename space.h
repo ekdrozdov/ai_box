@@ -25,7 +25,7 @@ public:
 	double* getTop(int x, int y);
 	double* getBottom(int x, int y);
 
-	double* getNodeByShift(int x, int y, int shiftX, int shiftY);
+	int* getNodeByShift(int x, int y, int shiftX, int shiftY);
 
 private:
 	double** mesh;

@@ -1,5 +1,49 @@
 #include "world.h"
 #include <iostream>
+
+
+int main(int argc, char **argv) {
+	Space space = Space(7, 7);
+	Time wTime = Time(1.0);
+	World world = World(&wTime, &space);
+
+	world.space->addEnergyToNode(3, 3, 1000.0);
+
+	Organism plant = Organism(50.0, 5, 5, &space);
+	world.plant = &plant;
+
+	int nStepsToLive;
+	scanf("%d", &nStepsToLive);
+	world.live(nStepsToLive);
+	printf("Energy total:%lf\n", world.space->getTotalEnergyValue());
+
+	/*
+	space.printMesh();
+	space.addEnergyToNode(5, 5, 100.0);
+	space.step();
+	space.printMesh();
+	*/
+
+	/*
+	world.addEnergyToNode(1, 1, 20.0);
+	world.addEnergyToNode(6, 10, 20.0);
+	world.addEnergyToNode(4, 15, 20.0);
+	world.addEnergyToNode(10, 10, 80.0);
+	world.addEnergyToNode(4, 8, 500.0);
+	*/
+	/*
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_RGB);
+	glutInitWindowSize(Width, Height);
+	glutCreateWindow("aiBox");
+	glutDisplayFunc(Display);
+	glutReshapeFunc(Reshape);
+	glutMouseFunc(Mouse);
+	glutMainLoop();
+	*/
+	return 0;
+}
+
 //#include "GL/glut.h"
 /*
 int Width = 1000, Height = 800;
@@ -50,30 +94,3 @@ void Mouse(int button, int state, GLint x, GLint y)
 }
 */
 
-int main(int argc, char **argv) {
-	Space space(10, 10);
-	space.printMesh();
-	space.addEnergyToNode(5, 5, 100.0);
-	space.step();
-	space.printMesh();
-
-	World world = World(Time(1.0), Space(15, 15));
-	/*
-	world.addEnergyToNode(1, 1, 20.0);
-	world.addEnergyToNode(6, 10, 20.0);
-	world.addEnergyToNode(4, 15, 20.0);
-	world.addEnergyToNode(10, 10, 80.0);
-	world.addEnergyToNode(4, 8, 500.0);
-	*/
-	/*
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGB);
-	glutInitWindowSize(Width, Height);
-	glutCreateWindow("aiBox");
-	glutDisplayFunc(Display);
-	glutReshapeFunc(Reshape);
-	glutMouseFunc(Mouse);
-	glutMainLoop();
-	*/
-	return 0;
-}

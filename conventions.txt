@@ -1,4 +1,5 @@
 prefixes:
 c -- coefficien
+n -- number
 
 suffixes:

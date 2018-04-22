@@ -1,5 +1,6 @@
 #include "organism.h"
 
+/*
 Organism::Organism(double pep, int x, int y) {
 	this->pep = pep;
 	aep = 0.0;
@@ -15,7 +16,6 @@ Organism::~Organism() {
 }
 
 void Organism::step() {
-	/*
 	int decision = 0;
 	// if (state != dead)
 	switch(decision) {
@@ -27,6 +27,5 @@ void Organism::step() {
 				 break;
 		default : disintegration();
 	}
-	*/
 }
-
+*/

@@ -3,13 +3,22 @@
 #include <stdio.h>
 #include "space.h"
 #include "time.h"
+#include "organism.h"
 
 class World {
 public:
-	World(Time time, Space space);
+	World(Time* wTime, Space* space);
 	~World();
-	void tick();
 
-	Time time;
-	Space space;
+	void live(int nSteps);
+
+	void printOn();
+	void printOff();
+
+	Time* wTime;
+	Space* space;
+	Organism* plant;
+
+private:	
+	bool isPrintOn;
 };

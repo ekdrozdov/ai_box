@@ -1,16 +1,19 @@
 #pragma once
 #include <stdlib.h>
 #include <time.h>
-
-extern Space space;
+#include "space.h"
 
 class Organism {
 public:
-	Organism(double pep, int x, int y);
+	Organism(double pep, int x, int y, Space* space);
 	~Organism();
 	void step();
 
+	void printInfo();
+
 protected:
+	Space* space;
+
 	Organism reproduct();
 	void grow();
 	void eat(double availableEnergy);
@@ -26,11 +29,13 @@ protected:
 
 	int x, y; // Coordinates.
 
-	static const double cWepq = 0.05;
-	static const double cEating = 0.10;
-	static const double cAep = 0.20;
-	static const double cReproduction = 20.0;
-	static const double maxSize = 100.0;
-	static const double cDesintegration = 0.10;
-	static const double cGrowth = 0.50;
+	static constexpr double cWepq = 0.05;
+	static constexpr double cEating = 0.10;
+	static constexpr double cAep = 0.20;
+	static constexpr double cReproduction = 0.0;//20.0;
+	static constexpr double maxSize = 100.0;
+	static constexpr double cDesintegration = 0.10;
+	static constexpr double cGrowth = 0.50;
+	static constexpr int reproductionMaxShift = 3;
+	static constexpr double cReproductionPep = 0.05;
 };
