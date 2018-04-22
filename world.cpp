@@ -12,12 +12,29 @@ World::~World() {
 };
 
 void World::live(int nSteps) {
+	if (isPrintOn) {
+		printf("Initialization:\n");
+		printf("\t--- Mesh (energy total: %lf) ---\n", 
+				space->getTotalEnergyValue());
+		space->printMesh();
+		printf("\n");
+		printf("\t--- Plant ---\n");
+		plant->printInfo();
+	}
+
 	for (int i = 0; i < nSteps; ++i) {
+
 		space->step();
+		plant->step();
+
 		if (isPrintOn) {
-			printf("Step %d/%d:\n", i + 1, nSteps);
+			printf("\n");
+			printf("\t###### Step %d/%d ######\n", i + 1, nSteps);
+			printf("\t--- Mesh (energy total: %lf) ---\n", 
+					space->getTotalEnergyValue());
 			space->printMesh();
-			plant->step();
+			printf("\n");
+			printf("\t--- Plant ---\n");
 			plant->printInfo();
 		}
 	}

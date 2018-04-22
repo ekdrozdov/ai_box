@@ -15,7 +15,6 @@ int main(int argc, char **argv) {
 	int nStepsToLive;
 	scanf("%d", &nStepsToLive);
 	world.live(nStepsToLive);
-	printf("Energy total:%lf\n", world.space->getTotalEnergyValue());
 
 	/*
 	space.printMesh();

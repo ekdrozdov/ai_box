@@ -8,12 +8,12 @@
 
 Organism::Organism(double pep, int x, int y, Space* space) {
 	this->space = space;
-	this->pep = pep - pep * cAep;
-	aep = pep * cAep;
-	wepq = 0.0;
+	this->pep = pep - pep * cBornAep;
+	aep = pep * cBornAep;
+	wepq = this->pep * cWepq;
 	state = 0;
 	repq = 0.0;
-	liveTime = 0;
+	lifetime = 0;
 	this->x = x;
 	this->y = y;
 }
@@ -97,10 +97,15 @@ void Organism::step() {
 	}
 
 	wepq = pep * cWepq;
+	repq = 0.0;
 	double availableEnergy = space->getNodeEnergy(x, y);
+	prevAvailEnergy = availableEnergy;
 
 	// Death.
 	if (aep <= 0.0) {
+		printf("\n");
+		printf("MESSAGE: plant is dead\n");
+		printf("\n");
 		die();
 		return;
 	}
@@ -110,7 +115,16 @@ void Organism::step() {
 		eat(availableEnergy);
 	}
 	// Growth or reproduction.
-	else {
+	else if (aep >= (pep * cAep)) {
+		printf("\n");
+		printf("MESSAGE: plant is grown up\n");
+		printf("[");
+		printf("aep = %lf   ", aep);
+		printf("cap = %lf", pep * cAep);
+		printf("]\n");
+		printf("\n");
+		grow();
+		/*
 		double growthChance = (rand() % 100) + 1;
 		if (growthChance > cReproduction) {
 			grow();
@@ -118,20 +132,24 @@ void Organism::step() {
 		else {
 			reproduct();
 		}
+		*/
 	}
 
 	aep -= wepq;
 	aep += repq;
+	lifetime++;
 }
 
 void Organism::printInfo() {
-	printf("Plant:\n");
-	printf("coordinates: %d %d\n", x, y);
+	printf("coordinates: (%d, %d)\n", x, y);
 	printf("pep: %lf\n", pep);
 	printf("aep: %lf\n", aep);
 	printf("wepq: %lf\n", wepq);
 	printf("state: %d\n", state);
 	printf("repq: %lf\n", repq);
-	printf("life time: %d\n", liveTime);
+	printf("life time: %d\n", lifetime);
+	printf("<max aep>: %lf\n", pep * cAep);
+	printf("<max repq>: %lf\n", pep * cEating);
+	printf("<energy available>: %lf\n", prevAvailEnergy);
 }
 
