@@ -1,37 +1,43 @@
 #include "world.h"
 #include <iostream>
 
-World::World(Time* wTime, Space* space) {
+World::World(Time *wTime, Space *space)
+{
 	this->wTime = wTime;
 	this->space = space;
 };
 
-World::~World() {
+World::~World()
+{
 	wTime = NULL;
 	space = NULL;
 };
 
-void World::live(int nSteps) {
-	if (isPrintOn) {
+void World::live(int nSteps)
+{
+	if (isPrintOn)
+	{
 		printf("Initialization:\n");
-		printf("\t--- Mesh (energy total: %lf) ---\n", 
-				space->getTotalEnergyValue());
+		printf("\t--- Mesh (energy total: %lf) ---\n",
+			   space->getTotalEnergyValue());
 		space->printMesh();
 		printf("\n");
 		printf("\t--- Plant ---\n");
 		plant->printInfo();
 	}
 
-	for (int i = 0; i < nSteps; ++i) {
+	for (int i = 0; i < nSteps; ++i)
+	{
 
 		space->step();
 		plant->step();
 
-		if (isPrintOn) {
+		if (isPrintOn)
+		{
 			printf("\n");
 			printf("\t###### Step %d/%d ######\n", i + 1, nSteps);
-			printf("\t--- Mesh (energy total: %lf) ---\n", 
-					space->getTotalEnergyValue());
+			printf("\t--- Mesh (energy total: %lf) ---\n",
+				   space->getTotalEnergyValue());
 			space->printMesh();
 			printf("\n");
 			printf("\t--- Plant ---\n");
@@ -40,11 +46,12 @@ void World::live(int nSteps) {
 	}
 }
 
-void World::printOn() {
+void World::printOn()
+{
 	isPrintOn = 1;
 }
 
-void World::printOff() {
+void World::printOff()
+{
 	isPrintOn = 0;
 }
-

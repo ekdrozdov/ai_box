@@ -1,28 +1,36 @@
 #include "space.h"
 
-Space::Space() {
+Space::Space()
+{
 	xSize = defaultSize;
 	ySize = defaultSize;
 }
 
-Space::Space(int xSize, int ySize) {
-	mesh = new double*[ySize];
-	for (int i = 0; i < ySize; ++i) {
+Space::Space(int xSize, int ySize)
+{
+	mesh = new double *[ySize];
+	for (int i = 0; i < ySize; ++i)
+	{
 		mesh[i] = new double[xSize];
 	}
 	this->xSize = xSize;
-	this->ySize = ySize;	
+	this->ySize = ySize;
 
-	for (int i = 0; i < ySize; ++i) {
-		for (int j = 0; j < xSize; ++j) {
+	for (int i = 0; i < ySize; ++i)
+	{
+		for (int j = 0; j < xSize; ++j)
+		{
 			mesh[i][j] = 0.0;
 		}
 	}
 }
 
-Space::~Space() {
-	if (mesh != NULL) {
-		for (int i = 0; i < ySize; ++i) {
+Space::~Space()
+{
+	if (mesh != NULL)
+	{
+		for (int i = 0; i < ySize; ++i)
+		{
 			delete[] mesh[i];
 		}
 		delete[] mesh;
@@ -31,95 +39,116 @@ Space::~Space() {
 	ySize = 0;
 }
 
-void Space::setMeshSize(int xSize, int ySize) {
+void Space::setMeshSize(int xSize, int ySize)
+{
 	// Create buffer.
-	double** oldMesh;
+	double **oldMesh;
 	int oldXSize = this->xSize;
 	int oldYSize = this->ySize;
-	oldMesh = new double*[oldYSize];
-	for (int i = 0; i < oldYSize; ++i) {
+	oldMesh = new double *[oldYSize];
+	for (int i = 0; i < oldYSize; ++i)
+	{
 		oldMesh[i] = new double[oldXSize];
 	}
 
 	// Copy mesh to a buffer considering resizing direction.
 	int xMin = std::min(oldXSize, xSize);
 	int yMin = std::min(oldYSize, ySize);
-	for (int i = 0; i < yMin; ++i) {
-		for (int j = 0; j < xMin; ++j) {
+	for (int i = 0; i < yMin; ++i)
+	{
+		for (int j = 0; j < xMin; ++j)
+		{
 			oldMesh[i][j] = mesh[i][j];
 		}
 	}
 
 	// Delete old mesh.
-	if (mesh != NULL) {
-		for (int i = 0; i < oldYSize; ++i) {
+	if (mesh != NULL)
+	{
+		for (int i = 0; i < oldYSize; ++i)
+		{
 			delete[] mesh[i];
 		}
 		delete[] mesh;
 	}
 
 	// Create new mesh.
-	mesh = new double*[ySize];
-	for (int i = 0; i < ySize; ++i) {
+	mesh = new double *[ySize];
+	for (int i = 0; i < ySize; ++i)
+	{
 		mesh[i] = new double[xSize];
 	}
 	this->xSize = xSize;
-	this->ySize = ySize;	
+	this->ySize = ySize;
 
-	for (int i = 0; i < ySize; ++i) {
-		for (int j = 0; j < xSize; ++j) {
+	for (int i = 0; i < ySize; ++i)
+	{
+		for (int j = 0; j < xSize; ++j)
+		{
 			mesh[i][j] = 0.0;
 		}
 	}
 
 	// Copy old mesh to new mesh.
-	for (int i = 0; i < yMin; ++i) {
-		for (int j = 0; j < xMin; ++j) {
+	for (int i = 0; i < yMin; ++i)
+	{
+		for (int j = 0; j < xMin; ++j)
+		{
 			mesh[i][j] = oldMesh[i][j];
 		}
 	}
 }
 
-void Space::printMesh() {
-	for (int i = 0; i < ySize; ++i) {
-		for (int j = 0; j < xSize; ++j) {
+void Space::printMesh()
+{
+	for (int i = 0; i < ySize; ++i)
+	{
+		for (int j = 0; j < xSize; ++j)
+		{
 			printf("%3.3f ", mesh[i][j]);
 		}
 		printf("\n");
 	}
 }
 
-double** Space::getMesh() {
+double **Space::getMesh()
+{
 	return mesh;
 }
 
-double** Space::step() {
+double **Space::step()
+{
 	// Extended mesh is mesh with shadow strings.
 	int extMeshXSize = xSize + 2;
 	int extMeshYSize = ySize + 2;
 
-	double** extMesh;
-	extMesh = new double*[extMeshYSize];
-	for (int i = 0; i < extMeshYSize; ++i) {
+	double **extMesh;
+	extMesh = new double *[extMeshYSize];
+	for (int i = 0; i < extMeshYSize; ++i)
+	{
 		extMesh[i] = new double[extMeshXSize];
 	}
 
 	// Copy base mesh in extended mesh.
-	for (int i = 0, extI = 1; i < ySize; ++i, ++extI) {
-		for (int j = 0, extJ = 1; j < xSize; ++j, ++extJ) {
+	for (int i = 0, extI = 1; i < ySize; ++i, ++extI)
+	{
+		for (int j = 0, extJ = 1; j < xSize; ++j, ++extJ)
+		{
 			extMesh[extI][extJ] = mesh[i][j];
 		}
 	}
 
 	// Fill the shadow strings, except corners.
-	for (int i = 0, extI = 1; i < ySize; ++i, ++extI) {
+	for (int i = 0, extI = 1; i < ySize; ++i, ++extI)
+	{
 		// Left border:
 		extMesh[extI][0] = mesh[i][xSize - 1];
 		// Right border:
 		extMesh[extI][extMeshXSize - 1] = mesh[i][0];
 	}
 
-	for (int j = 0, extJ = 1; j < xSize; ++j, ++extJ) {
+	for (int j = 0, extJ = 1; j < xSize; ++j, ++extJ)
+	{
 		// Top border:
 		extMesh[0][extJ] = mesh[ySize - 1][j];
 		// Bottom border:
@@ -138,99 +167,125 @@ double** Space::step() {
 
 	// Additions mesh is the mesh that describes how many
 	// energy must get or lost each node in the next step.
-	double** additionsMesh;
-	additionsMesh = new double*[extMeshYSize];
-	for (int i = 0; i < extMeshYSize; ++i) {
+	double **additionsMesh;
+	additionsMesh = new double *[extMeshYSize];
+	for (int i = 0; i < extMeshYSize; ++i)
+	{
 		additionsMesh[i] = new double[extMeshXSize];
 	}
 
 	// Initialize additions mesh with zeros.
-	for (int i = 0; i < extMeshYSize; ++i) {
-		for (int j = 0; j < extMeshXSize; ++j) {
+	for (int i = 0; i < extMeshYSize; ++i)
+	{
+		for (int j = 0; j < extMeshXSize; ++j)
+		{
 			additionsMesh[i][j] = 0.0;
 		}
 	}
 
-	for (int i = 0, iExt = 1; i < ySize; ++i, ++iExt) {
-		for (int j = 0, jExt = 1; j < xSize; ++j, ++jExt) {
+	for (int i = 0, iExt = 1; i < ySize; ++i, ++iExt)
+	{
+		for (int j = 0, jExt = 1; j < xSize; ++j, ++jExt)
+		{
 			// For each node count lack of energy neighbours.
 			int lackNeighboursNumber = 0;
 			double currentEnergy = mesh[i][j];
-			if (extMesh[iExt - 1][jExt- 1] < mesh[i][j]) {
+			if (extMesh[iExt - 1][jExt - 1] < mesh[i][j])
+			{
 				++lackNeighboursNumber;
 			}
-			if (extMesh[iExt][jExt - 1] < mesh[i][j]) {
+			if (extMesh[iExt][jExt - 1] < mesh[i][j])
+			{
 				++lackNeighboursNumber;
 			}
-			if (extMesh[iExt + 1][jExt - 1] < mesh[i][j]) {
+			if (extMesh[iExt + 1][jExt - 1] < mesh[i][j])
+			{
 				++lackNeighboursNumber;
 			}
-			if (extMesh[iExt - 1][jExt] < mesh[i][j]) {
+			if (extMesh[iExt - 1][jExt] < mesh[i][j])
+			{
 				++lackNeighboursNumber;
 			}
-			if (extMesh[iExt + 1][jExt] < mesh[i][j]) {
+			if (extMesh[iExt + 1][jExt] < mesh[i][j])
+			{
 				++lackNeighboursNumber;
 			}
-			if (extMesh[iExt + 1][jExt + 1] < mesh[i][j]) {
+			if (extMesh[iExt + 1][jExt + 1] < mesh[i][j])
+			{
 				++lackNeighboursNumber;
 			}
-			if (extMesh[iExt][jExt + 1] < mesh[i][j]) {
+			if (extMesh[iExt][jExt + 1] < mesh[i][j])
+			{
 				++lackNeighboursNumber;
 			}
-			if (extMesh[iExt - 1][jExt + 1] < mesh[i][j]) {
+			if (extMesh[iExt - 1][jExt + 1] < mesh[i][j])
+			{
 				++lackNeighboursNumber;
 			}
 
 			// And fill additions mesh.
 			double k = 0.5;
 			double energyToPass = currentEnergy * k *
-				(1.0 / lackNeighboursNumber);
-			if (extMesh[iExt - 1][jExt - 1] < mesh[i][j]) {
+								  (1.0 / lackNeighboursNumber);
+			if (extMesh[iExt - 1][jExt - 1] < mesh[i][j])
+			{
 				additionsMesh[iExt - 1][jExt - 1] += energyToPass;
 			}
-			if (extMesh[iExt - 1][jExt] < mesh[i][j]) {
+			if (extMesh[iExt - 1][jExt] < mesh[i][j])
+			{
 				additionsMesh[iExt - 1][jExt] += energyToPass;
 			}
-			if (extMesh[iExt - 1][jExt + 1] < mesh[i][j]) {
+			if (extMesh[iExt - 1][jExt + 1] < mesh[i][j])
+			{
 				additionsMesh[iExt - 1][jExt + 1] += energyToPass;
 			}
-			if (extMesh[iExt][jExt - 1] < mesh[i][j]) {
+			if (extMesh[iExt][jExt - 1] < mesh[i][j])
+			{
 				additionsMesh[iExt][jExt - 1] += energyToPass;
 			}
-			if (extMesh[iExt][jExt + 1] < mesh[i][j]) {
+			if (extMesh[iExt][jExt + 1] < mesh[i][j])
+			{
 				additionsMesh[iExt][jExt + 1] += energyToPass;
 			}
-			if (extMesh[iExt + 1][jExt - 1] < mesh[i][j]) {
+			if (extMesh[iExt + 1][jExt - 1] < mesh[i][j])
+			{
 				additionsMesh[iExt + 1][jExt - 1] += energyToPass;
 			}
-			if (extMesh[iExt + 1][jExt] < mesh[i][j]) {
+			if (extMesh[iExt + 1][jExt] < mesh[i][j])
+			{
 				additionsMesh[iExt + 1][jExt] += energyToPass;
 			}
-			if (extMesh[iExt + 1][jExt + 1] < mesh[i][j]) {
+			if (extMesh[iExt + 1][jExt + 1] < mesh[i][j])
+			{
 				additionsMesh[iExt + 1][jExt + 1] += energyToPass;
 			}
 
-			if (lackNeighboursNumber > 0) {
-				additionsMesh[iExt][jExt] -= 
+			if (lackNeighboursNumber > 0)
+			{
+				additionsMesh[iExt][jExt] -=
 					(extMesh[iExt][jExt] - currentEnergy * k);
 			}
 		}
 	}
 
 	// Apply additions to mesh.
-	for (int i = 0, extI = 1; i < ySize; ++i, ++extI) {
-		for (int j = 0, extJ = 1; j < xSize; ++j, ++extJ) {
+	for (int i = 0, extI = 1; i < ySize; ++i, ++extI)
+	{
+		for (int j = 0, extJ = 1; j < xSize; ++j, ++extJ)
+		{
 			mesh[i][j] += additionsMesh[extI][extJ];
 		}
 	}
 
-	for (int i = 0, extI = 1; i < ySize; ++i, ++extI) {
+	for (int i = 0, extI = 1; i < ySize; ++i, ++extI)
+	{
 		// Consider left shadow border.
 		mesh[i][xSize - 1] += additionsMesh[extI][0];
 		// Consider rigth shadow border.
 		mesh[i][0] += additionsMesh[extI][extMeshXSize - 1];
 	}
-	for (int j = 0, extJ = 1; j < xSize; ++j, ++extJ) {
+	for (int j = 0, extJ = 1; j < xSize; ++j, ++extJ)
+	{
 		// Consider top shadow border.
 		mesh[ySize - 1][j] += additionsMesh[0][extJ];
 		// Consider bottom shadow border.
@@ -246,7 +301,8 @@ double** Space::step() {
 	// Bottom right corner:
 	mesh[0][0] += additionsMesh[extMeshYSize - 1][extMeshXSize - 1];
 
-	for (int i = 0; i < extMeshYSize; ++i) {
+	for (int i = 0; i < extMeshYSize; ++i)
+	{
 		delete[] extMesh[i];
 		delete[] additionsMesh[i];
 	}
@@ -256,11 +312,15 @@ double** Space::step() {
 	return mesh;
 }
 
-double Space::getMaxEnergyInMesh() {
+double Space::getMaxEnergyInMesh()
+{
 	double maxEnergy = mesh[0][0];
-	for (int i = 0; i < ySize; ++i) {
-		for (int j = 0; j < xSize; ++j) {
-			if (mesh[i][j] > maxEnergy) {
+	for (int i = 0; i < ySize; ++i)
+	{
+		for (int j = 0; j < xSize; ++j)
+		{
+			if (mesh[i][j] > maxEnergy)
+			{
 				maxEnergy = mesh[i][j];
 			}
 		}
@@ -268,11 +328,15 @@ double Space::getMaxEnergyInMesh() {
 	return maxEnergy;
 }
 
-double Space::getMinEnergyInMesh() {
+double Space::getMinEnergyInMesh()
+{
 	double minEnergy = mesh[0][0];
-	for (int i = 0; i < ySize; ++i) {
-		for (int j = 0; j < xSize; ++j) {
-			if (mesh[i][j] < minEnergy) {
+	for (int i = 0; i < ySize; ++i)
+	{
+		for (int j = 0; j < xSize; ++j)
+		{
+			if (mesh[i][j] < minEnergy)
+			{
 				minEnergy = mesh[i][j];
 			}
 		}
@@ -280,31 +344,39 @@ double Space::getMinEnergyInMesh() {
 	return minEnergy;
 }
 
-double Space::getTotalEnergyValue() {
+double Space::getTotalEnergyValue()
+{
 	double total = 0.0;
-	for (int i = 0; i < ySize; ++i) {
-		for (int j = 0; j < xSize; ++j) {
+	for (int i = 0; i < ySize; ++i)
+	{
+		for (int j = 0; j < xSize; ++j)
+		{
 			total += mesh[i][j];
 		}
 	}
 	return total;
 }
 
-void Space::addEnergyToNode(int x, int y, double energyVal) {
+void Space::addEnergyToNode(int x, int y, double energyVal)
+{
 	mesh[y][x] += energyVal;
 }
 
-void Space::setEnergyInNode(int x, int y, double energyVal) {
+void Space::setEnergyInNode(int x, int y, double energyVal)
+{
 	mesh[y][x] = energyVal;
 }
 
-double Space::getNodeEnergy(int x, int y) {
+double Space::getNodeEnergy(int x, int y)
+{
 	return mesh[y][x];
 }
 
-int* Space::getNodeByShift(int x, int y, int shiftX, int shiftY) {
-	int* newCoords = new int[2];
+int *Space::getNodeByShift(int x, int y, int shiftX, int shiftY)
+{
+	int *newCoords = new int[2];
 	newCoords[0] = (x + shiftX) % xSize;
 	newCoords[1] = (y + shiftY) % ySize;
 	return newCoords;
 }
+

@@ -1,12 +1,15 @@
-class Time {
-public:
+#pragma once
+
+class Time
+{
+  public:
 	Time();
 	Time(double quantum);
 	~Time();
 
 	void setTimeQuantum(double quantum);
-	void increaseQuantum(double value); // Speed down.
-	void decreaseQuantum(double value); // Speed up.
+	void increaseQuantum(double value); // Increase speed.
+	void decreaseQuantum(double value); // Decrease speed.
 	void resetQuantum();
 	void stopTime();
 	void resumeTime();
@@ -16,7 +19,7 @@ public:
 
 	bool isStop;
 
-private:
+  private:
 	double currentQuantum;
 	double basicQuantum;
 

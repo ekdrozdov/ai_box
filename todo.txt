@@ -1,0 +1,2 @@
+how to do configurations?
+read from file; how to read config form file
