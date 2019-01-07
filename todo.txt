@@ -1,2 +1,31 @@
+	--- makefile ---
+add release and debug builds
+
+	--- refactoring ---
+finish plants
+add exceprions
+add capacity and permability checks
+profile memory and cpu usage and optimize it if requiered
+
+	--- GUI ---
+split GUI from main
+add statistics:
+	game info
+		total energy
+		lifesteps counter
+		life speed (steps per second)
+		mesh size
+	performance info
+		fps
+		memory usage
+		cpu usage
+split fps from physics: make separate thread for openGL and separate window
+
+	--- logs ---
+make separate console for logs
+learn how to logging properly and adjust log levels, flexible turning on and off logs for classes/events
+
+	--- configuration ---
 how to do configurations?
 read from file; how to read config form file
+make defaults configuration
