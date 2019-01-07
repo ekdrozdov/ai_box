@@ -1,17 +1,25 @@
-#include "energy_container.h"
+#pragma once
+#include "resource.h"
 
-enum Node_states
+enum Node_type
 {
 	water,
 	earth
 };
 
-class Node : Energy_container
+class Node
 {
 public:
+	Node() { type = water; };
+	Node(const Node &node)
+	{
+		type = node.type;
+		resource = node.resource;
+	};
+	Resource resource;
 
 private:
-	Node_states state;
-	double permeability = 0.0;
-	double capacity = 0.0;
+	Node_type type;
 };
+
+bool operator<(const Node &lhs, const Node &rhs);

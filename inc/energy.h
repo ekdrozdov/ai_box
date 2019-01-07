@@ -1,4 +1,5 @@
 #pragma once
+#include <stdexcept>
 #include <string>
 #include <set>
 
@@ -22,6 +23,9 @@ public:
   std::string state;
 };
 
+bool operator<(const Energy_state &lhs, const Energy_state &rhs);
+bool operator==(const Energy_state &lhs, const Energy_state &rhs);
+
 class Energy
 {
 public:
@@ -29,13 +33,18 @@ public:
   Energy(const double &count);
   Energy(const double &count, const Energy_state &state);
 
-  double inc(const double &count);
+  // bool add(const Energy &energy);
+  // double sub(const double &count);
+
+  void inc(const double &count);
   double dec(const double &count);
   double get_count() const;
-  double set_count(const double &count);
+  //double set_count(const double &count);
   inline Energy_state get_state() const { return state; };
 
 private:
   double count;
   Energy_state state;
 };
+
+Energy operator+=(const Energy &lhs, const Energy &rhs);

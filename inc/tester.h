@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include "energy.h"
-#include "energy_container.h"
+#include "Resource.h"
 #include "node.h"
 
 class Tester

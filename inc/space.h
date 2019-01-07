@@ -11,23 +11,23 @@ class Space
 	~Space();
 
 	void setMeshSize(int xSize, int ySize);
-	void printMesh();
+	void print_mesh();
 	double **getMesh();
 	double **step();
 	double getMaxEnergyInMesh();
 	double getMinEnergyInMesh();
-	double getTotalEnergyValue();
+	double get_total_energy_value();
 
-	void addEnergyToNode(int x, int y, double energyVal);
-	void setEnergyInNode(int x, int y, double energyVal);
-	double getNodeEnergy(int x, int y);
+	void add_energy_to_node(int x, int y, double energyVal);
+	void set_energy_in_node(int x, int y, double energyVal);
+	double get_node_energy(int x, int y);
 
-	double *getRight(int x, int y);
-	double *getLeft(int x, int y);
-	double *getTop(int x, int y);
-	double *getBottom(int x, int y);
+	double *get_right(int x, int y);
+	double *get_left(int x, int y);
+	double *get_top(int x, int y);
+	double *get_bottom(int x, int y);
 
-	int *getNodeByShift(int x, int y, int shiftX, int shiftY);
+	int *get_node_by_shift(int x, int y, int shiftX, int shiftY);
 
   private:
 	double **mesh;

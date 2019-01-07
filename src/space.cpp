@@ -99,7 +99,7 @@ void Space::setMeshSize(int xSize, int ySize)
 	}
 }
 
-void Space::printMesh()
+void Space::print_mesh()
 {
 	for (int i = 0; i < ySize; ++i)
 	{
@@ -344,7 +344,7 @@ double Space::getMinEnergyInMesh()
 	return minEnergy;
 }
 
-double Space::getTotalEnergyValue()
+double Space::get_total_energy_value()
 {
 	double total = 0.0;
 	for (int i = 0; i < ySize; ++i)
@@ -357,26 +357,25 @@ double Space::getTotalEnergyValue()
 	return total;
 }
 
-void Space::addEnergyToNode(int x, int y, double energyVal)
+void Space::add_energy_to_node(int x, int y, double energyVal)
 {
 	mesh[y][x] += energyVal;
 }
 
-void Space::setEnergyInNode(int x, int y, double energyVal)
+void Space::set_energy_in_node(int x, int y, double energyVal)
 {
 	mesh[y][x] = energyVal;
 }
 
-double Space::getNodeEnergy(int x, int y)
+double Space::get_node_energy(int x, int y)
 {
 	return mesh[y][x];
 }
 
-int *Space::getNodeByShift(int x, int y, int shiftX, int shiftY)
+int *Space::get_node_by_shift(int x, int y, int shiftX, int shiftY)
 {
 	int *newCoords = new int[2];
 	newCoords[0] = (x + shiftX) % xSize;
 	newCoords[1] = (y + shiftY) % ySize;
 	return newCoords;
 }
-
