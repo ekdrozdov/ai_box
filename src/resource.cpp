@@ -3,7 +3,7 @@
 Resource::Resource()
 {
     // capacity = 0.;
-    capacity = 10.;
+    capacity = 500.;
     // permeability = 0.;
     permeability = 5.;
     energy = Energy();

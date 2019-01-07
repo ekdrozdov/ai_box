@@ -6,75 +6,80 @@
 #include <windows.h>
 #include <GL/glut.h>
 
-bool flag = false;
+int WORLD_SIZE = 200;
+int Width = 1000, Height = 800;
+Mesh_2d mesh = Mesh_2d(Point({WORLD_SIZE, WORLD_SIZE}), Node());
 
-void display()
-{
-	glClear(GL_COLOR_BUFFER_BIT);
+// void display()
+// {
+// 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glBegin(GL_POLYGON);
-	glVertex2f(-0.5, -0.5);
-	glVertex2f(-0.5, 0.5);
-	glVertex2f(0.5, 0.5);
-	glVertex2f(0.5, -0.5);
-	glEnd();
+// 	glBegin(GL_POLYGON);
+// 	glVertex2f(-0.5, -0.5);
+// 	glVertex2f(-0.5, 0.5);
+// 	glVertex2f(0.5, 0.5);
+// 	glVertex2f(0.5, -0.5);
+// 	glEnd();
 
-	glFlush();
-}
+// 	glFlush();
+// }
 
 void key_reaction(unsigned char key, int x, int y)
 {
-	if (flag)
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		glBegin(GL_POLYGON);
-		glVertex2f(-0.5, -0.5);
-		glVertex2f(-0.5, 0.5);
-		glVertex2f(0.5, 0.5);
-		glVertex2f(0.5, -0.5);
-		glEnd();
-
-		glFlush();
-		flag = false;
-	}
-	else
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		glBegin(GL_POLYGON);
-		glVertex2f(-0.8, -0.8);
-		glVertex2f(-0.8, 0.8);
-		glVertex2f(0.8, 0.8);
-		glVertex2f(0.8, -0.8);
-		glEnd();
-
-		glFlush();
-		flag = true;
-	}
+	//world.sendData();
+	mesh.step();
+	glutPostRedisplay();
 }
 
-void init()
+void display()
 {
-	glClearColor(0.000, 0.110, 0.392, 0.0); // JMU Gold
+	glClearColor(0.3, 0.5, 1, 1);
+	float max = 0;
+	for (int i(0); i < WORLD_SIZE; i++)
+		for (int j(0); j < WORLD_SIZE; j++)
+			if (mesh.get_node_energy({i, j}) > max)
+				max = mesh.get_node_energy({i, j});
+	float a = (Height - 200) / WORLD_SIZE, x = -Width / 2 + 200, y = -Height / 2 + 100, c;
+	glBegin(GL_QUADS);
+	for (int i(0); i < WORLD_SIZE; i++)
+		for (int j(0); j < WORLD_SIZE; j++)
+		{
+			c = mesh.get_node_energy({i, j});
+			glColor3f(0.3 - c / 8, 0.5 - c / 2, 1 - c / 3);
+			glVertex2f(x + i * a, y + j * a);
+			glVertex2f(x + i * a + a, y + j * a);
+			glVertex2f(x + i * a + a, y + j * a + a);
+			glVertex2f(x + i * a, y + j * a + a);
+		}
+	glEnd();
+	glFinish();
+}
 
-	glColor3f(0.314, 0.314, 0.000); // JMU Purple
-
+void reshape(int Width, int Height)
+{
+	glViewport(0, 0, Width, Height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
+	glOrtho(-Width / 2, Width / 2, -Height / 2, Height / 2, -1, 1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glClearColor(0.3, 0.5, 1, 1);
 }
 
 int main(int argc, char **argv)
 {
+	mesh.add_energy_to_node({15, 15}, Energy(500.));
+	mesh.add_energy_to_node({100, 15}, Energy(500.));
+	mesh.add_energy_to_node({150, 150}, Energy(500.));
+
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+	glutInitDisplayMode(GLUT_RGB);
 	glutInitWindowSize(640, 480);
 	glutInitWindowPosition(0, 0);
-	glutCreateWindow("Test");
+	glutCreateWindow("ai_box");
 	glutDisplayFunc(display);
+	glutReshapeFunc(reshape);
 	glutKeyboardFunc(key_reaction);
-	init();
 	glutMainLoop();
 	// if (!Tester::run_all_tests())
 	// {
